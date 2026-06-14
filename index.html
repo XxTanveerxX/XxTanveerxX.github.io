@@ -1,140 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tanveer404</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Neon Interactive Site</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Segoe UI,sans-serif;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-body{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(-45deg,#0f172a,#1e293b,#0f172a,#1e1b4b);
-    background-size:400% 400%;
-    animation:bg 12s ease infinite;
-    overflow:hidden;
+body {
+  overflow-x: hidden;
+  background: #050510;
+  color: white;
 }
 
-@keyframes bg{
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
+/* glowing cursor light */
+.cursor-glow {
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(0,255,255,0.25), transparent 60%);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+  z-index: 1;
 }
 
-.card{
-    width:90%;
-    max-width:700px;
-    padding:40px;
-    border-radius:25px;
-    background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(15px);
-    border:1px solid rgba(255,255,255,0.15);
-    text-align:center;
-    color:white;
-    animation:fadeUp 1.2s ease;
+/* particle canvas */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
 
-@keyframes fadeUp{
-    from{
-        opacity:0;
-        transform:translateY(50px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+/* hero */
+.hero {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
-h1{
-    font-size:4rem;
-    margin-bottom:10px;
+.hero h1 {
+  font-size: 4rem;
+  text-shadow: 0 0 20px cyan;
+  animation: float 4s ease-in-out infinite;
 }
 
-.highlight{
-    background:linear-gradient(90deg,#38bdf8,#818cf8);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
+.hero p {
+  opacity: 0.7;
+  margin-top: 10px;
 }
 
-p{
-    color:#cbd5e1;
-    font-size:1.1rem;
-    margin-bottom:25px;
+@keyframes float {
+  0%,100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
 }
 
-.buttons{
-    display:flex;
-    gap:15px;
-    justify-content:center;
-    flex-wrap:wrap;
+/* button */
+.btn {
+  margin-top: 20px;
+  padding: 12px 24px;
+  border: 1px solid cyan;
+  background: transparent;
+  color: cyan;
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
 }
 
-.btn{
-    text-decoration:none;
-    color:white;
-    padding:12px 24px;
-    border-radius:12px;
-    background:rgba(255,255,255,0.1);
-    transition:0.3s;
+.btn:hover {
+  background: cyan;
+  color: black;
+  box-shadow: 0 0 20px cyan;
 }
 
-.btn:hover{
-    transform:translateY(-4px);
-    background:rgba(255,255,255,0.2);
+/* sections */
+section {
+  padding: 100px 20px;
+  position: relative;
+  z-index: 2;
 }
 
-.glow{
-    position:absolute;
-    width:300px;
-    height:300px;
-    background:#3b82f6;
-    border-radius:50%;
-    filter:blur(150px);
-    opacity:.25;
-    top:-100px;
-    left:-100px;
+/* cards */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
 }
 
-.glow2{
-    position:absolute;
-    width:300px;
-    height:300px;
-    background:#8b5cf6;
-    border-radius:50%;
-    filter:blur(150px);
-    opacity:.25;
-    bottom:-100px;
-    right:-100px;
+.card {
+  padding: 20px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(0,255,255,0.2);
+  backdrop-filter: blur(10px);
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 0 30px cyan;
+}
+
+/* animated shine */
+.card::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(120deg, transparent, rgba(0,255,255,0.2), transparent);
+  transform: rotate(25deg);
+  transition: 0.5s;
+}
+
+.card:hover::before {
+  top: 0;
+  left: 0;
+}
+
+/* scroll reveal */
+.hidden {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 1s ease;
+}
+
+.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>
 </head>
 
 <body>
 
-<div class="glow"></div>
-<div class="glow2"></div>
+<div class="cursor-glow" id="glow"></div>
+<canvas id="particles"></canvas>
 
-<div class="card">
-    <h1>Hi, I'm <span class="highlight">Tanveer</span></h1>
-    <p>
-        Welcome to my website.
-        Built with GitHub Pages, Cloudflare and a lot of patience 😎
-    </p>
-
-    <div class="buttons">
-        <a href="#" class="btn">About Me</a>
-        <a href="https://github.com/XxTanveerxX" class="btn">GitHub</a>
-    </div>
+<div class="hero">
+  <h1>My Neon Site</h1>
+  <p>Interactive • Animated • Modern UI</p>
+  <button class="btn">Explore</button>
 </div>
+
+<section>
+  <h2 class="hidden">Features</h2>
+  <div class="grid">
+    <div class="card hidden">Mouse Reactive UI</div>
+    <div class="card hidden">Particle System</div>
+    <div class="card hidden">Glass Morphism</div>
+    <div class="card hidden">Smooth Animations</div>
+  </div>
+</section>
+
+<script>
+// cursor glow
+const glow = document.getElementById("glow");
+
+document.addEventListener("mousemove", (e) => {
+  glow.style.left = e.clientX + "px";
+  glow.style.top = e.clientY + "px";
+});
+
+// particles
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for (let i = 0; i < 80; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 1,
+    vy: (Math.random() - 0.5) * 1,
+    r: Math.random() * 2
+  });
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let p of particles) {
+    p.x += p.vx;
+    p.y += p.vy;
+
+    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = "cyan";
+    ctx.fill();
+  }
+
+  requestAnimationFrame(draw);
+}
+draw();
+
+// scroll animation
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("show");
+    }
+  });
+});
+
+document.querySelectorAll(".hidden").forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>
