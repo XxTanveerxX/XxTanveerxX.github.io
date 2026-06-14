@@ -3,70 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modern Interactive UI</title>
+<title>Final Cinematic Engine</title>
 
 <style>
-:root {
-  --bg: #05060a;
-  --fg: #e8e8e8;
-  --accent: #7c5cff;
-  --accent2: #00d4ff;
-}
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: system-ui, Arial;
+  font-family: system-ui;
 }
 
 body {
-  background: var(--bg);
-  color: var(--fg);
-  overflow-x: hidden;
+  background: #05060a;
+  color: white;
+  overflow: hidden;
 }
 
-/* ===== NOISE LAYER ===== */
-.noise {
+/* ===== WEBGL BACKGROUND ===== */
+canvas {
   position: fixed;
   inset: 0;
-  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-  opacity: 0.06;
-  pointer-events: none;
-  z-index: 999;
-}
-
-/* ===== GRADIENT ORBS BACKGROUND ===== */
-.orb {
-  position: fixed;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.4;
   z-index: 0;
-  animation: floatOrb 12s infinite ease-in-out;
 }
 
-.orb.one {
-  background: var(--accent);
-  top: -100px;
-  left: -100px;
+/* ===== SCROLL SYSTEM ===== */
+#wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 
-.orb.two {
-  background: var(--accent2);
-  bottom: -150px;
-  right: -150px;
-  animation-delay: -6s;
+#content {
+  will-change: transform;
 }
 
-@keyframes floatOrb {
-  0%,100% { transform: translate(0,0); }
-  50% { transform: translate(80px,-60px); }
-}
-
-/* ===== CURSOR ===== */
+/* ===== CURSOR LIGHT FIELD ===== */
 .cursor {
   position: fixed;
   width: 20px;
@@ -76,261 +48,248 @@ body {
   mix-blend-mode: difference;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  z-index: 1000;
-  transition: transform 0.08s linear;
-}
-
-/* ===== NAV ===== */
-nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  padding: 20px 40px;
-  display: flex;
-  justify-content: space-between;
-  z-index: 10;
-  backdrop-filter: blur(10px);
-}
-
-nav a {
-  color: var(--fg);
-  text-decoration: none;
-  margin-left: 20px;
-  opacity: 0.7;
-  transition: 0.3s;
-}
-
-nav a:hover {
-  opacity: 1;
-}
-
-/* ===== HERO ===== */
-.hero {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  text-align: center;
-  position: relative;
-  z-index: 2;
-}
-
-.hero h1 {
-  font-size: 5rem;
-  letter-spacing: -2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.hero p {
-  margin-top: 10px;
-  opacity: 0.6;
-  max-width: 500px;
-}
-
-/* ===== MAGNET BUTTON ===== */
-.btn {
-  margin-top: 30px;
-  padding: 14px 28px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: transparent;
-  color: white;
-  cursor: pointer;
-  position: relative;
-  transition: 0.2s;
-}
-
-.btn:hover {
-  border-color: white;
+  z-index: 999;
 }
 
 /* ===== SECTIONS ===== */
 section {
-  padding: 120px 10%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10vw;
   position: relative;
-  z-index: 2;
 }
 
-.section-title {
-  font-size: 2.5rem;
-  margin-bottom: 40px;
+/* ===== TYPOGRAPHY ===== */
+h1 {
+  font-size: 6vw;
+  letter-spacing: -0.04em;
+}
+
+.word {
+  display: inline-block;
+  transform: translateY(120%);
   opacity: 0;
-  transform: translateY(40px);
-  transition: 1s;
+  transition: 1.2s cubic-bezier(.2,.8,.2,1);
 }
 
-.show {
-  opacity: 1 !important;
-  transform: translateY(0) !important;
-}
-
-/* ===== FEATURE GRID ===== */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.card {
-  padding: 30px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(10px);
-  transition: transform 0.2s ease;
+/* ===== MEDIA BLOCK ===== */
+.media {
+  width: 65%;
+  height: 420px;
+  margin-top: 40px;
+  background: linear-gradient(120deg,#222,#444);
   position: relative;
   overflow: hidden;
+  transform: scale(1.1);
+  opacity: 0;
+  transition: 1.2s cubic-bezier(.2,.8,.2,1);
 }
 
-/* hover light sweep */
-.card::before {
+.media::before {
   content: "";
   position: absolute;
-  width: 200%;
-  height: 200%;
-  top: -100%;
-  left: -100%;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.08), transparent);
-  transform: rotate(25deg);
-  transition: 0.5s;
+  inset: 0;
+  background: #05060a;
+  transform: translateX(0%);
+  transition: 1.2s cubic-bezier(.2,.8,.2,1);
 }
 
-.card:hover::before {
-  top: 0;
-  left: 0;
+/* ===== ACTIVE STATE ===== */
+.show .word {
+  transform: translateY(0);
+  opacity: 1;
 }
 
-/* ===== PARALLAX LAYERS ===== */
+.show .media {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.show .media::before {
+  transform: translateX(100%);
+}
+
+/* ===== LAYER DEPTH SYSTEM ===== */
 .layer {
   position: absolute;
   inset: 0;
   pointer-events: none;
-}
-
-/* ===== FOOTER ===== */
-footer {
-  padding: 80px;
-  text-align: center;
-  opacity: 0.5;
-}
-
-/* responsive */
-@media(max-width: 768px) {
-  .hero h1 { font-size: 3rem; }
 }
 </style>
 </head>
 
 <body>
 
-<div class="noise"></div>
-<div class="orb one"></div>
-<div class="orb two"></div>
+<canvas id="gl"></canvas>
 <div class="cursor" id="cursor"></div>
 
-<nav>
-  <div>NEO UI</div>
-  <div>
-    <a href="#">Home</a>
-    <a href="#">Work</a>
-    <a href="#">About</a>
-  </div>
-</nav>
+<div id="wrap">
+<div id="content">
 
-<div class="hero" id="hero">
-  <h1 id="title">Build Modern UI</h1>
-  <p>High-end interactive motion system without frameworks</p>
-  <button class="btn" id="magnet">Explore</button>
+<section>
+  <div>
+    <h1 class="text">Cinematic Experience Engine</h1>
+    <div class="media"></div>
+  </div>
+</section>
+
+<section>
+  <div>
+    <h1 class="text">Everything becomes motion</h1>
+    <div class="media"></div>
+  </div>
+</section>
+
+<section>
+  <div>
+    <h1 class="text">Scroll is the timeline</h1>
+    <div class="media"></div>
+  </div>
+</section>
+
+<section>
+  <div>
+    <h1 class="text">Designed like a film</h1>
+    <div class="media"></div>
+  </div>
+</section>
+
+</div>
 </div>
 
-<section>
-  <div class="section-title reveal">Features</div>
-  <div class="grid">
-    <div class="card">Mouse Parallax System</div>
-    <div class="card">Scroll Reveal Engine</div>
-    <div class="card">Interactive UI Physics</div>
-    <div class="card">Gradient Motion Layers</div>
-  </div>
-</section>
-
-<section>
-  <div class="section-title reveal">Experience</div>
-  <div class="grid">
-    <div class="card">Smooth Transitions</div>
-    <div class="card">GPU Friendly Animations</div>
-    <div class="card">Glass UI System</div>
-    <div class="card">Dynamic Depth Layers</div>
-  </div>
-</section>
-
-<footer>
-  Built with advanced vanilla JS motion system
-</footer>
-
 <script>
-// ===== CURSOR =====
+
+/* =========================
+   1. INERTIA SCROLL ENGINE
+========================= */
+
+let current = 0;
+let target = 0;
+
+function lerp(a,b,n){ return a + (b-a)*n; }
+
+const content = document.getElementById("content");
+
+function scrollLoop(){
+  target = window.scrollY;
+  current = lerp(current, target, 0.07);
+
+  content.style.transform = `translateY(${-current}px)`;
+
+  requestAnimationFrame(scrollLoop);
+}
+scrollLoop();
+
+
+/* =========================
+   2. CURSOR PHYSICS FIELD
+========================= */
+
 const cursor = document.getElementById("cursor");
-document.addEventListener("mousemove", (e) => {
-  cursor.style.left = e.clientX + "px";
-  cursor.style.top = e.clientY + "px";
+
+let cx = 0, cy = 0;
+let tx = 0, ty = 0;
+
+window.addEventListener("mousemove",(e)=>{
+  tx = e.clientX;
+  ty = e.clientY;
 });
 
-// ===== MAGNET BUTTON =====
-const btn = document.getElementById("magnet");
+function cursorLoop(){
+  cx = lerp(cx, tx, 0.14);
+  cy = lerp(cy, ty, 0.14);
 
-btn.addEventListener("mousemove", (e) => {
-  const rect = btn.getBoundingClientRect();
-  const x = e.clientX - rect.left - rect.width / 2;
-  const y = e.clientY - rect.top - rect.height / 2;
+  cursor.style.left = cx + "px";
+  cursor.style.top = cy + "px";
 
-  btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+  requestAnimationFrame(cursorLoop);
+}
+cursorLoop();
+
+
+/* =========================
+   3. TEXT ENGINE (WORD SPLIT)
+========================= */
+
+document.querySelectorAll(".text").forEach(el=>{
+  const words = el.innerText.split(" ");
+  el.innerHTML = "";
+
+  words.forEach((w,i)=>{
+    const span = document.createElement("span");
+    span.className = "word";
+    span.innerText = w + " ";
+    span.style.transitionDelay = (i * 0.05) + "s";
+    el.appendChild(span);
+  });
 });
 
-btn.addEventListener("mouseleave", () => {
-  btn.style.transform = "translate(0,0)";
-});
 
-// ===== PARALLAX HERO =====
-const title = document.getElementById("title");
+/* =========================
+   4. SCROLL REVEAL ENGINE
+========================= */
 
-document.addEventListener("mousemove", (e) => {
-  const x = (window.innerWidth / 2 - e.clientX) * 0.01;
-  const y = (window.innerHeight / 2 - e.clientY) * 0.01;
+const sections = document.querySelectorAll("section");
 
-  title.style.transform = `translate(${x}px, ${y}px)`;
-});
+function reveal(){
+  const trigger = window.innerHeight * 0.75;
 
-// ===== SCROLL REVEAL =====
-const reveals = document.querySelectorAll(".reveal");
+  sections.forEach(sec=>{
+    const rect = sec.getBoundingClientRect();
 
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("show");
+    if(rect.top < trigger){
+      sec.classList.add("show");
     }
   });
-}, { threshold: 0.2 });
 
-reveals.forEach(el => observer.observe(el));
+  requestAnimationFrame(reveal);
+}
+reveal();
 
-// ===== CARD 3D HOVER =====
-document.querySelectorAll(".card").forEach(card => {
-  card.addEventListener("mousemove", (e) => {
-    const r = card.getBoundingClientRect();
-    const x = e.clientX - r.left;
-    const y = e.clientY - r.top;
 
-    const rotateX = (y / r.height - 0.5) * -10;
-    const rotateY = (x / r.width - 0.5) * 10;
+/* =========================
+   5. WEBGL-STYLE BACKGROUND (FAKE SHADER FIELD)
+========================= */
 
-    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-  });
+const canvas = document.getElementById("gl");
+const ctx = canvas.getContext("2d");
 
-  card.addEventListener("mouseleave", () => {
-    card.style.transform = "rotateX(0) rotateY(0)";
-  });
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+let t = 0;
+
+function render(){
+  ctx.fillStyle = "rgba(5,6,10,0.15)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  for(let i=0;i<120;i++){
+    let x = canvas.width/2 + Math.sin(t + i * 0.1) * 300;
+    let y = canvas.height/2 + Math.cos(t + i * 0.12) * 300;
+
+    ctx.beginPath();
+    ctx.arc(x,y,1.2,0,Math.PI*2);
+    ctx.fillStyle = "rgba(255,255,255,0.12)";
+    ctx.fill();
+  }
+
+  t += 0.008;
+  requestAnimationFrame(render);
+}
+render();
+
+
+/* =========================
+   6. RESIZE HANDLER
+========================= */
+
+window.addEventListener("resize",()=>{
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
 });
+
 </script>
 
 </body>
